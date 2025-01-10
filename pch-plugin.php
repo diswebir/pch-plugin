@@ -7,20 +7,28 @@
  * Author: Reza_pch	
  * Author URI: https://disweb.ir/
  */
-//  add_action('plugins_loaded', 'custom_http_blocker_setup');
+// block external http connection and just allow some one ...
+  function block_external_links() {
+     define('WP_HTTP_BLOCK_EXTERNAL', true);
+     define('WP_ACCESSIBLE_HOSTS', '*.wordpress.com, *.wordpress.org,*.google.com');
 
-// function custom_http_blocker_setup() {
-//     define('WP_HTTP_BLOCK_EXTERNAL', true);
-//     define('WP_ACCESSIBLE_HOSTS', '*.cloudflare.com,*.wp-rocket.me,*.rtl-theme.com');
+     //*.zarinpal.com, *.persianscript.ir, *.woosupport.ir, *.ippanel.com, ippanel.com, *.torob.com , *.extractor.torob.com 
+
+ }
+ add_action('init', 'block_external_links');
+
+
+
+// change number of view for jetengine custom field
+// function increase_post_views() {
+//     $meta_values2 = get_post_meta(get_the_ID(), "number-viewc", true);
+//     $view_count2 = (int)$meta_values2 + 1;
+//     update_post_meta(get_the_ID(), 'number-viewc', $view_count2);
 // }
-function increase_post_views() {
-    $meta_values2 = get_post_meta(get_the_ID(), "number-viewc", true);
-    $view_count2 = (int)$meta_values2 + 1;
-    update_post_meta(get_the_ID(), 'number-viewc', $view_count2);
-}
-add_action('wp', 'increase_post_views');
+// add_action('wp', 'increase_post_views');
 
 
+// change admin area font 
 function font_pish() {
     echo "<style>
         li#menu-posts-wp_automatic,li#menu-tools,.error,div#lrm_auto_trigger,.woocommerce-layout__header,.wp-admin-bar-dwuos-notice {
@@ -32,7 +40,7 @@ add_action( 'admin_head', 'font_pish' );
 
 
 
-//غر فعالکردن ویرایش پلاگین و قالب 
+// disable theme and plugin editor
 function disable_theme_plugin_editing() {
     if ( ! defined( 'DISALLOW_FILE_EDIT' ) ) {
         define( 'DISALLOW_FILE_EDIT', true );
@@ -72,8 +80,10 @@ add_action( 'init', 'disable_theme_plugin_editing' );
 //     }
 // }
 
+// disable image surce set 
+// add_filter( 'wp_calculate_image_srcset', '__return_false' );
 
-add_filter( 'wp_calculate_image_srcset', '__return_false' );
+
 /**
 * Sorting out of stock WooCommerce products - Order product collections by stock status, in-stock products first.
 */
@@ -100,7 +110,7 @@ add_filter( 'wp_calculate_image_srcset', '__return_false' );
 // * END - Order product collections by stock status, instock products first.
 // */
 
-// غیرفعال کردن ویرایشگر گوتنبرگ
+// disable gutenberge
 add_filter('use_block_editor_for_post', '__return_false', 10);
 
 // فعال کردن ویرایشگر کلاسیک
@@ -117,113 +127,9 @@ function enable_classic_editor_automatically($post_type) {
 add_filter('gutenberg_can_edit_post_type', 'enable_classic_editor_automatically');
 
 
-// add_filter( 'the_title', 'shorten_woo_product_title', 10, 2 );
-// function shorten_woo_product_title( $title, $id ) {
-// if (get_post_type( $id ) === 'product' ) {
-//   return wp_trim_words( $title, 10, '...' ); // شما میتوانید عدد دلخواه خود را به جای 4 جایگذاری کنید.
-// } else {
-// return $title;
-// }
-// }
 
 
-
-
-
-
-
- 
-//   function block_external_links() {
-//      define('WP_HTTP_BLOCK_EXTERNAL', true);
-//      define('WP_ACCESSIBLE_HOSTS', '*.wordpress.com, *.wordpress.org,*.google.com');
-
-
-//  //*.zarinpal.com, *.persianscript.ir, *.woosupport.ir, *.ippanel.com, ippanel.com, *.torob.com , *.extractor.torob.com 
-//  }
-//  add_action('init', 'block_external_links');
-// # تغییر برنامه بر اساس درخواست جدید. 
-
-
-
-// // فانکشن برای به روزرسانی محصولات بدون قیمت به صورت خودکار
-// function update_products_stock_status() {
-//     // دریافت تمام محصولات بدون قیمت
-//     $args = array(
-//         'post_type'      => 'product',
-//         'posts_per_page' => -1,
-//         'meta_query'     => array(
-//             array(
-//                 'key'     => '_price',
-//                 'value'   => '',
-//                 'compare' => '=',
-//             ),
-//         ),
-//     );
-
-//     $products = new WP_Query($args);
-
-//     if ($products->have_posts()) {
-//         while ($products->have_posts()) {
-//             $products->the_post();
-            
-//             // به روزرسانی موجودی به صفر
-//             update_post_meta(get_the_ID(), '_stock', 0);
-//             update_post_meta(get_the_ID(), '_stock_status', 'outofstock');
-//         }
-//         wp_reset_postdata();
-//     }
-// }
-
-// // اجرای فانکشن به صورت دوره‌ای یا در هنگام فعال‌سازی افزونه
-// add_action('init', 'update_products_stock_status');
-
-// افزودن یک هوک برای اجرا قبل از ارسال درخواست
-// add_action('http_request_args', 'block_requests_to_specific_domains', 10, 2);
-
-// function block_requests_to_specific_domains($args, $url) {
-//     $blocked_domains = array(
-//         'intellywp.com',
-//         'rankmath.com',
-//         'api.crocoblock.com',
-//          '*.rankmath.com',
-//                  '*.crocoblock.com',
-//                   'perfmatters.io',
-//                   '*.optimizingmatters.com',
-//                     'feeds.feedburner.com',
-//                      '*.feedburner.com',
-//     );
-
-//     // بررسی آدرس درخواست
-//     foreach ($blocked_domains as $domain) {
-//         if (strpos($url, $domain) !== false) {
-//             // اگر آدرس دامنه مسدود شده باشد، ارسال درخواست نکن
-//             $args['blocking'] = false;
-//             break;
-//         }
-//     }
-
-//     return $args;
-// }
-// //remove error zlib output compression
-// remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 );
-// add_action( 'shutdown', function() {
-//   while ( @ob_end_flush() );
-// } );
-
-
-
-// // /////
-// add_shortcode('my_custom_orders','my_custom_orders_shortcode');
-// function my_custom_orders_shortcode(){
-//     ob_start();
-//     $order_count = 4; // تعداد سفارش‌های مورد نظر را تعیین کنید
-//     wc_get_template('myaccount/my-orders.php', array('order_count' => $order_count));
-//     return ob_get_clean();
-// }
-
-
-
-///shokrino
+// add style to admin area
 defined( 'ABSPATH' ) || exit;
 
 $plugin_data = get_file_data(__FILE__, array('Version' => 'Version'), false);

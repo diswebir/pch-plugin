@@ -79,4 +79,4 @@ If you need support or have any questions, please feel free to reach out through
 
 ## License
 
-This plugin is released under the GPL-2.0 or later license.
+This plugin is released under the GPL-3.0 or later license.

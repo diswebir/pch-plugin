@@ -7,6 +7,46 @@
  * Author: Reza_pch	
  * Author URI: https://disweb.ir/
  */
+
+
+//disable full gutenberge
+add_filter('use_block_editor_for_post_type', '__return_false', 10);
+
+// غیرفعال کردن ویرایشگر گوتنبرگ در ابزارک‌ها (Widgets)
+add_filter('use_widgets_block_editor', '__return_false');
+
+// حذف فایل‌های CSS و JS مربوط به گوتنبرگ
+function disable_gutenberg_assets() {
+    // حذف فایل‌های CSS هسته وردپرس مربوط به گوتنبرگ
+    wp_dequeue_style('wp-block-library'); // استایل‌های اصلی بلاک‌ها
+    wp_dequeue_style('wp-block-library-theme'); // استایل‌های مربوط به قالب بلاک‌ها
+    wp_dequeue_style('wc-block-style'); // استایل‌های WooCommerce
+    wp_dequeue_style('storefront-gutenberg-blocks'); // استایل‌های قالب Storefront
+
+    // حذف فایل‌های JS مربوط به گوتنبرگ (در صورت نیاز)
+    wp_dequeue_script('wp-block-editor'); // اسکریپت اصلی گوتنبرگ
+}
+add_action('wp_enqueue_scripts', 'disable_gutenberg_assets', 100);
+
+// فعال‌سازی ویرایشگر کلاسیک به جای گوتنبرگ (در صورت نیاز)
+add_filter('classic_editor_enabled', '__return_true');
+
+// جلوگیری از بارگذاری استایل‌های گوتنبرگ در بخش مدیریت (Admin)
+function disable_gutenberg_admin_assets() {
+    wp_dequeue_style('wp-block-library'); // حذف استایل‌های بلاک‌ها در داشبورد
+}
+add_action('admin_enqueue_scripts', 'disable_gutenberg_admin_assets', 100);
+
+// غیرفعال کردن قابلیت Full Site Editing (در صورت استفاده از قالب‌های FSE)
+add_filter('block_editor_settings_all', function($settings) {
+    $settings['enableFullSiteEditing'] = false;
+    return $settings;
+});
+
+
+
+
+
 // block external http connection and just allow some one ...
   function block_external_links() {
      define('WP_HTTP_BLOCK_EXTERNAL', true);
@@ -111,20 +151,20 @@ add_action( 'init', 'disable_theme_plugin_editing' );
 // */
 
 // disable gutenberge
-add_filter('use_block_editor_for_post', '__return_false', 10);
+// add_filter('use_block_editor_for_post', '__return_false', 10);
 
-// فعال کردن ویرایشگر کلاسیک
-function enable_classic_editor_automatically($post_type) {
-    $post_types = array('post', 'page'); // نوع پست‌هایی که می‌خواهید از ویرایشگر کلاسیک استفاده شود
-    if (in_array($post_type, $post_types)) {
-        $user = wp_get_current_user();
-        if (!empty($user->ID) && !empty($user->roles) && is_array($user->roles) && in_array('administrator', $user->roles)) {
-            return false; // اجازه استفاده از ویرایشگر کلاسیک برای مدیران
-        }
-    }
-    return true;
-}
-add_filter('gutenberg_can_edit_post_type', 'enable_classic_editor_automatically');
+// // فعال کردن ویرایشگر کلاسیک
+// function enable_classic_editor_automatically($post_type) {
+//     $post_types = array('post', 'page'); // نوع پست‌هایی که می‌خواهید از ویرایشگر کلاسیک استفاده شود
+//     if (in_array($post_type, $post_types)) {
+//         $user = wp_get_current_user();
+//         if (!empty($user->ID) && !empty($user->roles) && is_array($user->roles) && in_array('administrator', $user->roles)) {
+//             return false; // اجازه استفاده از ویرایشگر کلاسیک برای مدیران
+//         }
+//     }
+//     return true;
+// }
+// add_filter('gutenberg_can_edit_post_type', 'enable_classic_editor_automatically');
 
 
 
